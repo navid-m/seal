@@ -15,13 +15,12 @@ module Pillar
   
     begin
         content = File.read(ARGV[0] + ".p")
-        lexer = Lexer.new(content)
-        tokens = lexer.tokenize
-        parser = Parser.new(tokens)
+        lexer   = Lexer.new(content)
+        tokens  = lexer.tokenize
+        parser  = Parser.new(tokens)
         program = parser.parse
         interpreter = Interpreter.new
         interpreter.execute(program)
-        
     rescue ex : File::NotFoundError
         puts "No such file exists: #{ARGV[0]}.p"
     rescue ex : Exception
