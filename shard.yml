@@ -1,0 +1,13 @@
+name: pillar
+version: 0.1.0
+
+authors:
+  - Navid M <navidmomtahen@gmail.com>
+
+targets:
+  pillar:
+    main: src/pillar.cr
+
+crystal: '>= 1.18.1'
+
+license: MIT
