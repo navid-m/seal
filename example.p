@@ -13,3 +13,4 @@ n=$"Enter a number: ";
 %n;
 m=$;
 %m;
+£p($);
