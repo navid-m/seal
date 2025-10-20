@@ -78,6 +78,13 @@ module Pillar
         end
     end
 
+    class PrintVariable < Stmt
+        property variables : Array(String)
+
+        def initialize(@variables : Array(String))
+        end
+    end
+
     class Program < ASTNode
         property statements : Array(Stmt)
 

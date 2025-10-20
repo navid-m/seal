@@ -1,8 +1,8 @@
-"Hello, world"
-x=1
-x++
-x+=2
-x
-y=5
-x=y+2
-x
+"Hello, world";
+x=1;
+x++;
+x+=2;
+%x;
+y=5;
+x=y+2;
+%x,y;

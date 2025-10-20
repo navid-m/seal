@@ -61,6 +61,17 @@ module Pillar
                 stmt = PrintStmt.new(expr)
                 consume_statement_end
                 return stmt
+            when TokenType::PERCENT
+                advance
+                variables = [] of String
+                variables << expect(TokenType::IDENTIFIER).value
+                while current_token.type == TokenType::COMMA
+                    advance
+                    variables << expect(TokenType::IDENTIFIER).value
+                end
+                stmt = PrintVariable.new(variables)
+                consume_statement_end
+                return stmt
             when TokenType::IDENTIFIER
                 name = current_token.value
                 advance
@@ -96,7 +107,9 @@ module Pillar
         end
     
         def consume_statement_end
-            if current_token.type == TokenType::COMMA || current_token.type == TokenType::NEWLINE
+            if current_token.type == TokenType::SEMICOLON
+                advance
+            elsif current_token.type == TokenType::NEWLINE
                 advance
             end
         end

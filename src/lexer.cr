@@ -14,6 +14,8 @@ module Pillar
         DIVIDE_ASSIGN
         INCREMENT
         DECREMENT
+        PERCENT
+        SEMICOLON
         COMMA
         NEWLINE
         EOF
@@ -159,6 +161,12 @@ module Pillar
                 end
                 when '='
                     tokens << Token.new(TokenType::ASSIGN, "=", @line)
+                    advance
+                when '%'
+                    tokens << Token.new(TokenType::PERCENT, "%", @line)
+                    advance
+                when ';'
+                    tokens << Token.new(TokenType::SEMICOLON, ";", @line)
                     advance
                 else
                 if @current_char.as(Char).ascii_number?

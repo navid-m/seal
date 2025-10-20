@@ -21,6 +21,11 @@ module Pillar
             when PrintStmt
             value = evaluate_expression(stmt.expression)
             puts value
+            when PrintVariable
+            stmt.variables.each do |var_name|
+                value = @variables[var_name]? || 0
+                puts value
+            end
             when Assignment
             value = evaluate_expression(stmt.expression)
             if value.is_a?(Int32)
