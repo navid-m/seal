@@ -101,6 +101,17 @@ module Pillar
             end
             when FunctionCall
             call_function(expr.name, expr.arguments)
+            when Input
+            if expr.prompt
+                print expr.prompt
+                STDOUT.flush
+            end
+            input = gets
+            if input
+                input.strip.to_i? || 0
+            else
+                0
+            end
             else
             raise "Unknown expression type"
             end

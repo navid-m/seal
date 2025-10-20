@@ -16,6 +16,7 @@ module Pillar
         DECREMENT
         PERCENT
         POUND
+        DOLLAR
         SEMICOLON
         COMMA
         LPAREN
@@ -179,6 +180,9 @@ module Pillar
                     advance
                 when ')'
                     tokens << Token.new(TokenType::RPAREN, ")", @line)
+                    advance
+                when '$'
+                    tokens << Token.new(TokenType::DOLLAR, "$", @line)
                     advance
                 else
                 if @current_char.as(Char).ascii_number?

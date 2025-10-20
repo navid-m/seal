@@ -51,6 +51,13 @@ module Pillar
         end
     end
 
+    class Input < Expr
+        property prompt : String?
+
+        def initialize(@prompt : String? = nil)
+        end
+    end
+
     abstract class Stmt < ASTNode
     end
 

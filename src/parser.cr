@@ -179,6 +179,15 @@ module Pillar
                 expr = parse_expression
                 expect(TokenType::RPAREN)
                 expr
+            when TokenType::DOLLAR
+                advance
+                if current_token.type == TokenType::STRING
+                    prompt = current_token.value
+                    advance
+                    Input.new(prompt)
+                else
+                    Input.new
+                end
             else
                 raise "Unexpected token #{current_token.type} at line #{current_token.line}"
             end
