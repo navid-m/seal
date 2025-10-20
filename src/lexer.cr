@@ -15,8 +15,11 @@ module Pillar
         INCREMENT
         DECREMENT
         PERCENT
+        POUND
         SEMICOLON
         COMMA
+        LPAREN
+        RPAREN
         NEWLINE
         EOF
     end
@@ -167,6 +170,15 @@ module Pillar
                     advance
                 when ';'
                     tokens << Token.new(TokenType::SEMICOLON, ";", @line)
+                    advance
+                when '£'
+                    tokens << Token.new(TokenType::POUND, "£", @line)
+                    advance
+                when '('
+                    tokens << Token.new(TokenType::LPAREN, "(", @line)
+                    advance
+                when ')'
+                    tokens << Token.new(TokenType::RPAREN, ")", @line)
                     advance
                 else
                 if @current_char.as(Char).ascii_number?

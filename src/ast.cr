@@ -43,6 +43,14 @@ module Pillar
         end
     end
 
+    class FunctionCall < Expr
+        property name : String
+        property arguments : Array(Expr)
+
+        def initialize(@name : String, @arguments : Array(Expr))
+        end
+    end
+
     abstract class Stmt < ASTNode
     end
 
@@ -82,6 +90,13 @@ module Pillar
         property variables : Array(String)
 
         def initialize(@variables : Array(String))
+        end
+    end
+
+    class PrintExpression < Stmt
+        property expression : Expr
+
+        def initialize(@expression : Expr)
         end
     end
 

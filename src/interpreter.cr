@@ -21,6 +21,9 @@ module Pillar
             when PrintStmt
             value = evaluate_expression(stmt.expression)
             puts value
+            when PrintExpression
+            value = evaluate_expression(stmt.expression)
+            puts value
             when PrintVariable
             stmt.variables.each do |var_name|
                 value = @variables[var_name]? || 0
@@ -96,9 +99,41 @@ module Pillar
             else
                 raise "Binary operations only supported on integers"
             end
+            when FunctionCall
+            call_function(expr.name, expr.arguments)
             else
             raise "Unknown expression type"
             end
+        end
+
+        def call_function(name : String, arguments : Array(Expr)) : Int32
+            case name
+            when "p"
+                if arguments.size != 1
+                    raise "Function p expects 1 argument, got #{arguments.size}"
+                end
+                value = evaluate_expression(arguments[0])
+                if value.is_a?(Int32)
+                    is_prime(value) ? 1 : 0
+                else
+                    raise "Function p expects integer argument"
+                end
+            else
+                raise "Unknown function: #{name}"
+            end
+        end
+
+        def is_prime(n : Int32) : Bool
+            return false if n < 2
+            return true if n == 2
+            return false if n % 2 == 0
+            
+            i = 3
+            while i * i <= n
+                return false if n % i == 0
+                i += 2
+            end
+            true
         end
     end
 end

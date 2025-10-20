@@ -72,6 +72,12 @@ module Pillar
                 stmt = PrintVariable.new(variables)
                 consume_statement_end
                 return stmt
+            when TokenType::POUND
+                advance
+                expr = parse_expression
+                stmt = PrintExpression.new(expr)
+                consume_statement_end
+                return stmt
             when TokenType::IDENTIFIER
                 name = current_token.value
                 advance
@@ -153,7 +159,26 @@ module Pillar
             when TokenType::IDENTIFIER
                 name = current_token.value
                 advance
-                Variable.new(name)
+                if current_token.type == TokenType::LPAREN
+                    advance
+                    arguments = [] of Expr
+                    if current_token.type != TokenType::RPAREN
+                        arguments << parse_expression
+                        while current_token.type == TokenType::COMMA
+                            advance
+                            arguments << parse_expression
+                        end
+                    end
+                    expect(TokenType::RPAREN)
+                    FunctionCall.new(name, arguments)
+                else
+                    Variable.new(name)
+                end
+            when TokenType::LPAREN
+                advance
+                expr = parse_expression
+                expect(TokenType::RPAREN)
+                expr
             else
                 raise "Unexpected token #{current_token.type} at line #{current_token.line}"
             end
