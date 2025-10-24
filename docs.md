@@ -129,6 +129,31 @@ x=5;
 
 **Note:** Any non-zero value is considered true. Zero is false.
 
+### Repeat Loops
+
+**Syntax:** `rN{statements}` or `r<expression>{statements}`
+
+Repeats the block exactly N times. Inside the loop, `_` contains the current iteration number (1-indexed).
+
+**Examples:**
+```seal
+r5{"Hello";}      // Prints "Hello" 5 times
+```
+
+```seal
+r10{£_;}          // Prints 1 2 3 4 5 6 7 8 9 10
+```
+
+```seal
+n=3;
+r n*2{£_;}        // Repeats n*2 times, _ goes from 1 to n*2
+```
+
+**Note:** 
+- The count is evaluated once before the loop starts
+- `_` starts at 1 and increments to N
+- `_` is a regular variable that can be read or modified
+
 ---
 
 ## Input/Output
@@ -211,6 +236,11 @@ i=1;
 ```
 
 ### FizzBuzz (1-100)
+
+**With repeat loop (51 bytes):**
+```seal
+r100{£!_~15?"FizzBuzz":!_~3?"Fizz":!_~5?"Buzz":_;}
+```
 
 **With negation operator (59 bytes):**
 ```seal

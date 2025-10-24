@@ -131,6 +131,14 @@ module Seal
         end
     end
 
+    class RepeatLoop < Stmt
+        property count : Expr
+        property body : Array(Stmt)
+
+        def initialize(@count : Expr, @body : Array(Stmt))
+        end
+    end
+
     class Program < ASTNode
         property statements : Array(Stmt)
 

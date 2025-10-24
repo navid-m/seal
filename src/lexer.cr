@@ -25,6 +25,7 @@ module Seal
         LBRACE
         RBRACE
         AT
+        R
         LESS_THAN
         GREATER_THAN
         LESS_EQUAL
@@ -211,6 +212,9 @@ module Seal
                     advance
                 when '@'
                     tokens << Token.new(TokenType::AT, "@", @line)
+                    advance
+                when 'r'
+                    tokens << Token.new(TokenType::R, "r", @line)
                     advance
                 when '{'
                     tokens << Token.new(TokenType::LBRACE, "{", @line)

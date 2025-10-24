@@ -58,6 +58,8 @@ module Seal
             case current_token.type
             when TokenType::AT
                 return parse_while_loop
+            when TokenType::R
+                return parse_repeat_loop
             when TokenType::COLON
                 advance
                 expr = parse_expression
@@ -122,21 +124,20 @@ module Seal
     
         def consume_statement_end
             if current_token.type == TokenType::SEMICOLON
-                advance
             elsif current_token.type == TokenType::NEWLINE
                 advance
             end
         end
     
-        def parse_while_loop : WhileLoop
+        def parse_while_loop : Stmt
             expect(TokenType::AT)
             expect(TokenType::LPAREN)
             condition = parse_expression
             expect(TokenType::RPAREN)
             expect(TokenType::LBRACE)
-            skip_newlines
             
             body = [] of Stmt
+            skip_newlines
             while current_token.type != TokenType::RBRACE && current_token.type != TokenType::EOF
                 stmt = parse_statement
                 body << stmt if stmt
@@ -145,6 +146,23 @@ module Seal
             
             expect(TokenType::RBRACE)
             WhileLoop.new(condition, body)
+        end
+    
+        def parse_repeat_loop : Stmt
+            expect(TokenType::R)
+            count = parse_expression
+            expect(TokenType::LBRACE)
+            
+            body = [] of Stmt
+            skip_newlines
+            while current_token.type != TokenType::RBRACE && current_token.type != TokenType::EOF
+                stmt = parse_statement
+                body << stmt if stmt
+                skip_newlines
+            end
+            
+            expect(TokenType::RBRACE)
+            RepeatLoop.new(count, body)
         end
     
         def parse_expression : Expr

@@ -79,6 +79,16 @@ module Seal
                 raise "Unknown increment/decrement operator: #{stmt.operator}"
             end
             @variables[stmt.variable] = result
+            when RepeatLoop
+            count = evaluate_expression(stmt.count)
+            if count.is_a?(Int32)
+                count.times do |i|
+                @variables["_"] = i + 1
+                stmt.body.each do |body_stmt|
+                    execute_statement(body_stmt)
+                end
+                end
+            end
             end
         end
 
