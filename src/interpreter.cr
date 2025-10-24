@@ -90,6 +90,18 @@ module Seal
             expr.value
             when Variable
             @variables[expr.name]? || 0
+            when UnaryOp
+            operand = evaluate_expression(expr.operand)
+            if operand.is_a?(Int32)
+                case expr.operator
+                when "!"
+                    operand == 0 ? 1 : 0
+                else
+                    raise "Unknown unary operator: #{expr.operator}"
+                end
+            else
+                raise "Unary operations only supported on integers"
+            end
             when BinaryOp
             left = evaluate_expression(expr.left)
             right = evaluate_expression(expr.right)

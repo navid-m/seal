@@ -48,6 +48,15 @@
 
 **Note:** Comparison operators return `1` for true, `0` for false.
 
+### Unary Operators
+
+| Operator | Description | Example | Result |
+|----------|-------------|---------|--------|
+| `!` | Logical NOT (negation) | `!0` | `1` (true) |
+| `!` | Logical NOT | `!5` | `0` (false) |
+
+**Note:** `!` returns `1` if operand is `0`, otherwise returns `0`.
+
 ### Ternary Operator
 
 | Operator | Description | Example | Result |
@@ -203,6 +212,11 @@ i=1;
 
 ### FizzBuzz (1-100)
 
+**With negation operator (59 bytes):**
+```seal
+i=1;@(i<101){£!i~15?"FizzBuzz":!i~3?"Fizz":!i~5?"Buzz":i;i¬;}
+```
+
 **With ternary operator (65 bytes):**
 ```seal
 i=1;@(i<101){£i~15|0?"FizzBuzz":i~3|0?"Fizz":i~5|0?"Buzz":i;i¬;}
@@ -272,8 +286,9 @@ From highest to lowest:
 1. **Parentheses:** `()`
 2. **Multiplicative:** `*`, `/`, `~`
 3. **Additive:** `+`, `-`
-4. **Comparison:** `<`, `>`, `<=`, `>=`, `==`, `!=`
-5. **Ternary:** `?:`
+4. **Unary:** `!`
+5. **Comparison:** `<`, `>`, `<=`, `>=`, `==`, `!=`
+6. **Ternary:** `?:`
 
 ---
 
@@ -281,12 +296,13 @@ From highest to lowest:
 
 1. Use `¬` instead of `++` (saves 1 byte)
 2. Use `|` instead of `==` (saves 1 byte)
-3. Use ternary `?:` for conditional logic instead of loops
-4. Use `:` for printing without newlines
-5. Omit semicolons where newlines work
-6. Use `@(condition)` for truthiness checks
-7. Comparison operators return 1/0, use them directly
-8. Variables default to 0, no need to initialize
+3. Use `!` instead of `|0` for zero checks (saves 1 byte)
+4. Use ternary `?:` for conditional logic instead of loops
+5. Use `:` for printing without newlines
+6. Omit semicolons where newlines work
+7. Use `@(condition)` for truthiness checks
+8. Comparison operators return 1/0, use them directly
+9. Variables default to 0, no need to initialize
 
 ### Byte-Saving Examples
 

@@ -166,16 +166,25 @@ module Seal
         end
     
         def parse_comparison : Expr
-            left = parse_additive
+            left = parse_unary
             while current_token.type.in?(TokenType::LESS_THAN, TokenType::GREATER_THAN, 
                                          TokenType::LESS_EQUAL, TokenType::GREATER_EQUAL,
                                          TokenType::EQUAL, TokenType::NOT_EQUAL)
                 op = current_token.value
                 advance
-                right = parse_additive
+                right = parse_unary
                 left = BinaryOp.new(left, op, right)
             end
             left
+        end
+    
+        def parse_unary : Expr
+            if current_token.type == TokenType::BANG
+                advance
+                operand = parse_unary
+                return UnaryOp.new("!", operand)
+            end
+            parse_additive
         end
     
         def parse_additive : Expr

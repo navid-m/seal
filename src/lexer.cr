@@ -33,6 +33,7 @@ module Seal
         NOT_EQUAL
         COLON
         QUESTION
+        BANG
         NEWLINE
         EOF
     end
@@ -250,6 +251,7 @@ module Seal
                     advance
                     tokens << Token.new(TokenType::NOT_EQUAL, "!=", @line)
                 else
+                    tokens << Token.new(TokenType::BANG, "!", @line)
                     advance
                 end
                 else

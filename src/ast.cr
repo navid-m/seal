@@ -37,9 +37,9 @@ module Seal
 
     class UnaryOp < Expr
         property operator : String
-        property operand : Variable
+        property operand : Expr
 
-        def initialize(@operator : String, @operand : Variable)
+        def initialize(@operator : String, @operand : Expr)
         end
     end
 
