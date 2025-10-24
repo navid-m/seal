@@ -23,13 +23,13 @@ if PROGRAM_NAME.includes?("seal")
     end
 
     begin
-        content = File.read(ARGV[0] + ".sl")
-        preprocessed = Seal::Preprocessor.process(content)
-        lexer   = Seal::Lexer.new(preprocessed)
-        tokens  = lexer.tokenize
-        parser  = Seal::Parser.new(tokens)
-        program = parser.parse
-        interpreter = Seal::Interpreter.new
+        content       = File.read(ARGV[0] + ".sl")
+        preprocessed  = Seal::Preprocessor.process(content)
+        lexer         = Seal::Lexer.new(preprocessed)
+        tokens        = lexer.tokenize
+        parser        = Seal::Parser.new(tokens)
+        program       = parser.parse
+        interpreter   = Seal::Interpreter.new
         interpreter.execute(program)
     rescue ex : File::NotFoundError
         puts "No such file exists: #{ARGV[0]}.sl"
