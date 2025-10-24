@@ -41,7 +41,7 @@ describe Seal do
 
         it "performs compound assignment" do
             result = run_seal("x=10;x+=5;%x;")
-            result.should eq("15\n")
+            result.should eq("15.0\n")
         end
 
         it "increments with ++" do

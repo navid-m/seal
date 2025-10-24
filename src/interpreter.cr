@@ -158,15 +158,15 @@ module Seal
             end
             when UnaryOp
             operand = evaluate_expression(expr.operand)
-            if operand.is_a?(Int32)
+            if operand.is_a?(Int32) || operand.is_a?(Float64)
                 case expr.operator
                 when "!"
-                    operand == 0 ? 1 : 0
+                    (operand == 0 || operand == 0.0) ? 1 : 0
                 else
                     raise "Unknown unary operator: #{expr.operator}"
                 end
             else
-                raise "Unary operations only supported on integers"
+                raise "Unary operations only supported on numbers"
             end
             when BinaryOp
             left = evaluate_expression(expr.left)
@@ -184,34 +184,63 @@ module Seal
                 raise "Operator #{expr.operator} not supported for strings"
                 end
             elsif (left.is_a?(Int32) || left.is_a?(Float64)) && (right.is_a?(Int32) || right.is_a?(Float64))
-                l = left.is_a?(Float64) ? left : left.to_f
-                r = right.is_a?(Float64) ? right : right.to_f
-                
-                case expr.operator
-                when "+"
-                l + r
-                when "-"
-                l - r
-                when "*"
-                l * r
-                when "/"
-                l / r
-                when "~"
-                l % r
-                when "<"
-                l < r ? 1 : 0
-                when ">"
-                l > r ? 1 : 0
-                when "<="
-                l <= r ? 1 : 0
-                when ">="
-                l >= r ? 1 : 0
-                when "==", "|"
-                l == r ? 1 : 0
-                when "!="
-                l != r ? 1 : 0
+                if left.is_a?(Int32) && right.is_a?(Int32)
+                    case expr.operator
+                    when "+"
+                    left + right
+                    when "-"
+                    left - right
+                    when "*"
+                    left * right
+                    when "/"
+                    left // right
+                    when "~"
+                    left % right
+                    when "<"
+                    left < right ? 1 : 0
+                    when ">"
+                    left > right ? 1 : 0
+                    when "<="
+                    left <= right ? 1 : 0
+                    when ">="
+                    left >= right ? 1 : 0
+                    when "==", "|"
+                    left == right ? 1 : 0
+                    when "!="
+                    left != right ? 1 : 0
+                    else
+                    raise "Unknown binary operator: #{expr.operator}"
+                    end
                 else
-                raise "Unknown binary operator: #{expr.operator}"
+                    l = left.is_a?(Float64) ? left : left.to_f
+                    r = right.is_a?(Float64) ? right : right.to_f
+                    
+                    case expr.operator
+                    when "+"
+                    l + r
+                    when "-"
+                    l - r
+                    when "*"
+                    l * r
+                    when "/"
+                    l / r
+                    when "~"
+                    l % r
+                    when "<"
+                    l < r ? 1 : 0
+                    when ">"
+                    l > r ? 1 : 0
+                    when "<="
+                    l <= r ? 1 : 0
+                    when ">="
+                    l >= r ? 1 : 0
+                    when "==", "|"
+                    l == r ? 1 : 0
+                    when "!="
+                    l != r ? 1 : 0
+                    else
+                    raise "Unknown binary operator: #{expr.operator}"
+                    end
                 end
             else
                 raise "Type mismatch in binary operation"
