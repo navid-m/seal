@@ -128,6 +128,9 @@ module Seal
                 when ','
                 tokens << Token.new(TokenType::COMMA, ",", @line)
                 advance
+                when '¬'
+                    tokens << Token.new(TokenType::INCREMENT, "¬", @line)
+                    advance
                 when '+'
                 if peek == '+'
                     advance

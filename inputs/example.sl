@@ -1,6 +1,6 @@
 "Hello, world";
 x=1;
-x++;
+x¬;
 x+=2;
 %x;
 y=5;

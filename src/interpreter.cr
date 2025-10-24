@@ -68,7 +68,7 @@ module Seal
             when IncrementDecrement
             current = @variables[stmt.variable]? || 0
             result = case stmt.operator
-            when "++"
+            when "++", "¬"
                 current + 1
             when "--"
                 current - 1
