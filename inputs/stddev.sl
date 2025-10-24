@@ -1,8 +1,1 @@
-n=$"Count: ";
-x=0.0;
-ss=0.0;
-rn{v=\\;x+=v;ss+=v*v;}
-m=x/n;
-var=(ss-x*x/n)/n;
-sd=q(var);
-£sd;
+n=$"";x=0.0;z=0.0;rn{v=\\;x+=v;z+=v*v;}m=x/n;var=(z-x*x/n)/n;e=q(var);£e;
