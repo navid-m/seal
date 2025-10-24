@@ -300,6 +300,29 @@ module Seal
             else
                 raise "Square root requires numeric value"
             end
+            when ArrayCollectInput
+            count_val = evaluate_expression(expr.count)
+            count = if count_val.is_a?(Int32)
+                count_val
+            elsif count_val.is_a?(Float64)
+                count_val.to_i
+            else
+                raise "Array collection count must be a number"
+            end
+            
+            array = [] of Value
+            count.times do
+                if expr.is_float
+                    input = gets
+                    value = input ? (input.strip.to_f? || 0.0) : 0.0
+                    array << value
+                else
+                    input = gets
+                    value = input ? (input.strip.to_i? || 0) : 0
+                    array << value
+                end
+            end
+            array
             else
             raise "Unknown expression type"
             end
@@ -335,7 +358,6 @@ module Seal
         def calculate_std_dev(arr : Array(Value)) : Float64
             return 0.0 if arr.empty?
             
-            # Convert to floats and calculate mean
             nums = arr.map do |v|
                 case v
                 when Int32

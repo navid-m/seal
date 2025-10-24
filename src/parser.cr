@@ -274,7 +274,11 @@ module Seal
                 advance
                 if current_token.type == TokenType::DOLLAR
                     advance
-                    if current_token.type == TokenType::STRING
+                    if current_token.type == TokenType::MULTIPLY
+                        advance
+                        count_expr = parse_expression
+                        ArrayCollectInput.new(count_expr, true)
+                    elsif current_token.type == TokenType::STRING
                         prompt = current_token.value
                         advance
                         FloatInput.new(prompt)
@@ -342,7 +346,11 @@ module Seal
                 expr
             when TokenType::DOLLAR
                 advance
-                if current_token.type == TokenType::STRING
+                if current_token.type == TokenType::MULTIPLY
+                    advance
+                    count_expr = parse_expression
+                    ArrayCollectInput.new(count_expr, false)
+                elsif current_token.type == TokenType::STRING
                     prompt = current_token.value
                     advance
                     Input.new(prompt)

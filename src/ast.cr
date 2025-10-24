@@ -198,6 +198,14 @@ module Seal
         end
     end
 
+    class ArrayCollectInput < Expr
+        property count : Expr
+        property is_float : Bool
+
+        def initialize(@count : Expr, @is_float : Bool)
+        end
+    end
+
     class SquareRoot < Expr
         property value : Expr
 
