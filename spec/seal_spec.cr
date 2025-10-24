@@ -98,10 +98,10 @@ describe Seal do
             result.should eq("0\n0\n")
         end
 
-        # it "works with expressions" do
-        #     result = run_seal("£!15~15;£!15~3;")
-        #     result.should eq("1\n0\n")
-        # end
+        it "works with expressions" do
+            result = run_seal("£!15~15;£!16~3;")
+            result.should eq("1\n0\n")
+        end
     end
 
     describe "Ternary Operator" do
