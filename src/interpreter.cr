@@ -97,10 +97,14 @@ module Seal
                 end
             end
             when ThreadSpawn
+            thread_vars = @variables.dup
             fiber = spawn do
+                saved_vars = @variables
+                @variables = thread_vars
                 stmt.body.each do |body_stmt|
                 execute_statement(body_stmt)
                 end
+                @variables = saved_vars
             end
             @threads << fiber
             end
