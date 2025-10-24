@@ -53,9 +53,21 @@ module Seal
 
         def self.process(source : String) : String
             result = source
+            lines = result.lines
+            lines = lines.map do |line|
+                comment_pos = line.index("//")
+                if comment_pos
+                    line[0...comment_pos]
+                else
+                    line
+                end
+            end
+            result = lines.join("\n")
+            
             ALIASES.each do |alias_str, replacement|
                 result = result.gsub(alias_str, replacement)
             end
+            
             result
         end
     end
