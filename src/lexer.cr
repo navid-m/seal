@@ -46,6 +46,20 @@ module Seal
         EOF
     end
 
+    class Preprocessor
+        ALIASES = {
+            "@@" => "\\$*$",
+        }
+
+        def self.process(source : String) : String
+            result = source
+            ALIASES.each do |alias_str, replacement|
+                result = result.gsub(alias_str, replacement)
+            end
+            result
+        end
+    end
+
     class Token
         property type : TokenType
         property value : String

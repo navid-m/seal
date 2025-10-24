@@ -19,7 +19,8 @@ if PROGRAM_NAME.includes?("seal")
 
     begin
         content = File.read(ARGV[0] + ".sl")
-        lexer   = Seal::Lexer.new(content)
+        preprocessed = Seal::Preprocessor.process(content)
+        lexer   = Seal::Lexer.new(preprocessed)
         tokens  = lexer.tokenize
         parser  = Seal::Parser.new(tokens)
         program = parser.parse
