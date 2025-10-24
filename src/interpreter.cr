@@ -137,6 +137,13 @@ module Seal
             else
                 0
             end
+            when TernaryOp
+            condition = evaluate_expression(expr.condition)
+            if condition.is_a?(Int32) && condition != 0
+                evaluate_expression(expr.true_expr)
+            else
+                evaluate_expression(expr.false_expr)
+            end
             else
             raise "Unknown expression type"
             end

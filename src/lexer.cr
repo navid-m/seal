@@ -32,6 +32,7 @@ module Seal
         EQUAL
         NOT_EQUAL
         COLON
+        QUESTION
         NEWLINE
         EOF
     end
@@ -221,6 +222,9 @@ module Seal
                     advance
                 when '|'
                     tokens << Token.new(TokenType::EQUAL, "|", @line)
+                    advance
+                when '?'
+                    tokens << Token.new(TokenType::QUESTION, "?", @line)
                     advance
                 when '<'
                 if peek == '='

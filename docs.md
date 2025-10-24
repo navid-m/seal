@@ -48,6 +48,30 @@
 
 **Note:** Comparison operators return `1` for true, `0` for false.
 
+### Ternary Operator
+
+| Operator | Description | Example | Result |
+|----------|-------------|---------|--------|
+| `?:` | Conditional expression | `5>3?1:0` | `1` |
+| `?:` | Nested ternary | `x|0?"yes":"no"` | `"yes"` or `"no"` |
+
+**Syntax:** `condition ? valueIfTrue : valueIfFalse`
+
+The ternary operator evaluates the condition. If non-zero (true), it returns the first value; otherwise, it returns the second value.
+
+**Examples:**
+```seal
+£5>3?10:20;        // Prints: 10
+£2>5?10:20;        // Prints: 20
+x=5;
+£x|5?"equal":"not equal";  // Prints: equal
+```
+
+**Nested ternaries:**
+```seal
+£x>10?"big":x>5?"medium":"small";
+```
+
 ### Assignment Operators
 
 | Operator | Description | Example | Equivalent |
@@ -178,21 +202,28 @@ i=1;
 ```
 
 ### FizzBuzz (1-100)
+
+**With ternary operator (65 bytes):**
+```seal
+i=1;@(i<101){£i~15|0?"FizzBuzz":i~3|0?"Fizz":i~5|0?"Buzz":i;i¬;}
+```
+
+**Without ternary operator:**
 ```seal
 i=1;
 @(i<101){
     a=i~3;
     b=i~5;
     f=0;
-    @(a==0){
+    @(a|0){
         :"Fizz";
         f=1;
     };
-    @(b==0){
+    @(b|0){
         :"Buzz";
         f=1;
     };
-    @(f==0){
+    @(f|0){
         £i;
         "";
     };
@@ -242,6 +273,7 @@ From highest to lowest:
 2. **Multiplicative:** `*`, `/`, `~`
 3. **Additive:** `+`, `-`
 4. **Comparison:** `<`, `>`, `<=`, `>=`, `==`, `!=`
+5. **Ternary:** `?:`
 
 ---
 
@@ -249,11 +281,12 @@ From highest to lowest:
 
 1. Use `¬` instead of `++` (saves 1 byte)
 2. Use `|` instead of `==` (saves 1 byte)
-3. Use `:` for printing without newlines
-4. Omit semicolons where newlines work
-5. Use `@(condition)` for truthiness checks
-6. Comparison operators return 1/0, use them directly
-7. Variables default to 0, no need to initialize
+3. Use ternary `?:` for conditional logic instead of loops
+4. Use `:` for printing without newlines
+5. Omit semicolons where newlines work
+6. Use `@(condition)` for truthiness checks
+7. Comparison operators return 1/0, use them directly
+8. Variables default to 0, no need to initialize
 
 ### Byte-Saving Examples
 

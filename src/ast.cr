@@ -58,6 +58,15 @@ module Seal
         end
     end
 
+    class TernaryOp < Expr
+        property condition : Expr
+        property true_expr : Expr
+        property false_expr : Expr
+
+        def initialize(@condition : Expr, @true_expr : Expr, @false_expr : Expr)
+        end
+    end
+
     abstract class Stmt < ASTNode
     end
 

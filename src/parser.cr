@@ -148,7 +148,21 @@ module Seal
         end
     
         def parse_expression : Expr
-            parse_comparison
+            parse_ternary
+        end
+    
+        def parse_ternary : Expr
+            expr = parse_comparison
+            
+            if current_token.type == TokenType::QUESTION
+                advance
+                true_expr = parse_comparison
+                expect(TokenType::COLON)
+                false_expr = parse_ternary
+                return TernaryOp.new(expr, true_expr, false_expr)
+            end
+            
+            expr
         end
     
         def parse_comparison : Expr
