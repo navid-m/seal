@@ -5,8 +5,9 @@ module Seal
 
     class Interpreter
         @variables : Hash(String, Int32)
+        @output : IO
 
-        def initialize
+        def initialize(@output : IO = STDOUT)
             @variables = {} of String => Int32
         end
 
@@ -20,17 +21,17 @@ module Seal
             case stmt
             when PrintStmt
             value = evaluate_expression(stmt.expression)
-            puts value
+            @output.puts value
             when PrintExpression
             value = evaluate_expression(stmt.expression)
-            puts value
+            @output.puts value
             when PrintNoNewline
             value = evaluate_expression(stmt.expression)
-            print value
+            @output.print value
             when PrintVariable
             stmt.variables.each do |var_name|
                 value = @variables[var_name]? || 0
-                puts value
+                @output.puts value
             end
             when Assignment
             value = evaluate_expression(stmt.expression)
