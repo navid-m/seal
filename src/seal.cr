@@ -16,7 +16,7 @@ if PROGRAM_NAME.includes?("seal")
         puts "Wrong argument count"
         exit(1)
     end
-  
+
     begin
         content = File.read(ARGV[0] + ".sl")
         lexer   = Seal::Lexer.new(content)
