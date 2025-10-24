@@ -100,6 +100,11 @@ module Seal
                     stmt = ArrayAppend.new(name, expr)
                     consume_statement_end
                     return stmt
+                when TokenType::POUND
+                    advance
+                    stmt = Assignment.new(name, ArrayLiteral.new([] of Expr))
+                    consume_statement_end
+                    return stmt
                 when TokenType::ASSIGN
                     advance
                     expr = parse_expression
