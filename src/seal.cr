@@ -1,3 +1,5 @@
+# Seal Programming Language
+#
 # By Navid M
 # GPL-3.0 - NM (C) 2025
 
