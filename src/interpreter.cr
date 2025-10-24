@@ -184,7 +184,6 @@ module Seal
                 raise "Operator #{expr.operator} not supported for strings"
                 end
             elsif (left.is_a?(Int32) || left.is_a?(Float64)) && (right.is_a?(Int32) || right.is_a?(Float64))
-                # Convert to float if either operand is float
                 l = left.is_a?(Float64) ? left : left.to_f
                 r = right.is_a?(Float64) ? right : right.to_f
                 

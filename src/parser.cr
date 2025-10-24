@@ -267,7 +267,7 @@ module Seal
                 ArrayLiteral.new(elements)
             when TokenType::BACKSLASH
                 advance
-                if current_token.type == TokenType::DOLLAR  # \$ for float input
+                if current_token.type == TokenType::DOLLAR
                     advance
                     if current_token.type == TokenType::STRING
                         prompt = current_token.value
