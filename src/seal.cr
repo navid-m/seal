@@ -11,7 +11,6 @@ module Seal
     VERSION = "0.1.0"
 end
 
-# Only run main logic if this file is executed directly (not when loaded by specs)
 if PROGRAM_NAME.includes?("seal")
     if ARGV.size < 1
         puts "Wrong argument count"
