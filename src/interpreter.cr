@@ -19,7 +19,7 @@ module Seal
             end
             until @threads.all? { |f| f.dead? }
                 Fiber.yield
-                sleep 0.01
+                sleep Time::Span.new(nanoseconds:10_000_000)
             end
         end
 
