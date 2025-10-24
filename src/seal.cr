@@ -16,6 +16,11 @@ if PROGRAM_NAME.includes?("seal")
         puts "Usage: seal [file-without-sl-extension]"
         exit(1)
     end
+    
+    if ARGV[0] == "--version"
+        puts Seal::VERSION
+        exit(0)
+    end
 
     begin
         content = File.read(ARGV[0] + ".sl")
