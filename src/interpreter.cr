@@ -6,17 +6,21 @@ module Seal
     class Interpreter
         @variables : Hash(String, Value)
         @output : IO
+        @threads : Array(Fiber)
 
         def initialize(@output : IO = STDOUT)
             @variables = {} of String => Value
+            @threads = [] of Fiber
         end
 
         def execute(program : Program)
             program.statements.each do |stmt|
             execute_statement(stmt)
             end
-            Fiber.yield
-            sleep 0.1
+            until @threads.all? { |f| f.dead? }
+                Fiber.yield
+                sleep 0.01
+            end
         end
 
         def execute_statement(stmt : Stmt)
@@ -93,11 +97,12 @@ module Seal
                 end
             end
             when ThreadSpawn
-            spawn do
+            fiber = spawn do
                 stmt.body.each do |body_stmt|
                 execute_statement(body_stmt)
                 end
             end
+            @threads << fiber
             end
         end
 
