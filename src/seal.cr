@@ -8,7 +8,7 @@ require "./parser"
 require "./interpreter"
 
 module Seal
-    VERSION = "0.1.0"
+    VERSION = "2.1.0"
 end
 
 if PROGRAM_NAME.includes?("seal")
