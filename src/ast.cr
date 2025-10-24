@@ -19,6 +19,13 @@ module Seal
         end
     end
 
+    class FloatLiteral < Expr
+        property value : Float64
+
+        def initialize(@value : Float64)
+        end
+    end
+
     class Variable < Expr
         property name : String
 
@@ -157,6 +164,20 @@ module Seal
         property prompt : String?
 
         def initialize(@prompt : String? = nil)
+        end
+    end
+
+    class FloatInput < Expr
+        property prompt : String?
+
+        def initialize(@prompt : String? = nil)
+        end
+    end
+
+    class SquareRoot < Expr
+        property value : Expr
+
+        def initialize(@value : Expr)
         end
     end
 

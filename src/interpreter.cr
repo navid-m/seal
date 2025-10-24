@@ -1,7 +1,7 @@
 require "./ast"
 
 module Seal
-    alias Value = Int32 | String
+    alias Value = Int32 | Float64 | String
 
     class Interpreter
         @variables : Hash(String, Value)
@@ -54,22 +54,24 @@ module Seal
             current = @variables[stmt.variable]? || 0
             value = evaluate_expression(stmt.expression)
             
-            if current.is_a?(Int32) && value.is_a?(Int32)
+            if (current.is_a?(Int32) || current.is_a?(Float64)) && (value.is_a?(Int32) || value.is_a?(Float64))
+                c = current.is_a?(Float64) ? current : current.to_f
+                v = value.is_a?(Float64) ? value : value.to_f
                 result = case stmt.operator
                 when "+="
-                current + value
+                c + v
                 when "-="
-                current - value
+                c - v
                 when "*="
-                current * value
+                c * v
                 when "/="
-                current // value
+                c / v
                 else
                 raise "Unknown compound assignment operator: #{stmt.operator}"
                 end
                 @variables[stmt.variable] = result
             else
-                raise "Compound assignment requires integer operands"
+                raise "Compound assignment requires numeric operands"
             end
             when IncrementDecrement
             current = @variables[stmt.variable]? || 0
@@ -116,6 +118,8 @@ module Seal
             expr.value
             when NumberLiteral
             expr.value
+            when FloatLiteral
+            expr.value
             when Variable
             @variables[expr.name]? || 0
             when UnaryOp
@@ -145,30 +149,34 @@ module Seal
                 else
                 raise "Operator #{expr.operator} not supported for strings"
                 end
-            elsif left.is_a?(Int32) && right.is_a?(Int32)
+            elsif (left.is_a?(Int32) || left.is_a?(Float64)) && (right.is_a?(Int32) || right.is_a?(Float64))
+                # Convert to float if either operand is float
+                l = left.is_a?(Float64) ? left : left.to_f
+                r = right.is_a?(Float64) ? right : right.to_f
+                
                 case expr.operator
                 when "+"
-                left + right
+                l + r
                 when "-"
-                left - right
+                l - r
                 when "*"
-                left * right
+                l * r
                 when "/"
-                left // right
+                l / r
                 when "~"
-                left % right
+                l % r
                 when "<"
-                left < right ? 1 : 0
+                l < r ? 1 : 0
                 when ">"
-                left > right ? 1 : 0
+                l > r ? 1 : 0
                 when "<="
-                left <= right ? 1 : 0
+                l <= r ? 1 : 0
                 when ">="
-                left >= right ? 1 : 0
+                l >= r ? 1 : 0
                 when "==", "|"
-                left == right ? 1 : 0
+                l == r ? 1 : 0
                 when "!="
-                left != right ? 1 : 0
+                l != r ? 1 : 0
                 else
                 raise "Unknown binary operator: #{expr.operator}"
                 end
@@ -210,6 +218,26 @@ module Seal
             end
             input = gets
             input ? input.strip : ""
+            when FloatInput
+            if expr.prompt
+                @output.print expr.prompt
+                @output.flush
+            end
+            input = gets
+            if input
+                input.strip.to_f? || 0.0
+            else
+                0.0
+            end
+            when SquareRoot
+            value = evaluate_expression(expr.value)
+            if value.is_a?(Int32)
+                Math.sqrt(value.to_f)
+            elsif value.is_a?(Float64)
+                Math.sqrt(value)
+            else
+                raise "Square root requires numeric value"
+            end
             else
             raise "Unknown expression type"
             end

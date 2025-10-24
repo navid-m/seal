@@ -249,7 +249,16 @@ module Seal
             case current_token.type
             when TokenType::BACKSLASH
                 advance
-                if current_token.type == TokenType::STRING
+                if current_token.type == TokenType::BACKSLASH
+                    advance
+                    if current_token.type == TokenType::STRING
+                        prompt = current_token.value
+                        advance
+                        FloatInput.new(prompt)
+                    else
+                        FloatInput.new
+                    end
+                elsif current_token.type == TokenType::STRING
                     prompt = current_token.value
                     advance
                     StringInput.new(prompt)
@@ -262,14 +271,24 @@ module Seal
                 duration = parse_expression
                 expect(TokenType::RPAREN)
                 Sleep.new(duration)
+            when TokenType::Q
+                advance
+                expect(TokenType::LPAREN)
+                value = parse_expression
+                expect(TokenType::RPAREN)
+                SquareRoot.new(value)
             when TokenType::STRING
                 value = current_token.value
                 advance
                 StringLiteral.new(value)
             when TokenType::NUMBER
-                value = current_token.value.to_i
+                value_str = current_token.value
                 advance
-                NumberLiteral.new(value)
+                if value_str.includes?('.')
+                    FloatLiteral.new(value_str.to_f)
+                else
+                    NumberLiteral.new(value_str.to_i)
+                end
             when TokenType::IDENTIFIER
                 name = current_token.value
                 advance

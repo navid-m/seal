@@ -28,6 +28,7 @@ module Seal
         R
         T
         S
+        Q
         BACKSLASH
         LESS_THAN
         GREATER_THAN
@@ -107,6 +108,14 @@ module Seal
             while @current_char && @current_char.as(Char).ascii_number?
                 result += @current_char.as(Char)
                 advance
+            end
+            if @current_char == '.'
+                result += '.'
+                advance
+                while @current_char && @current_char.as(Char).ascii_number?
+                    result += @current_char.as(Char)
+                    advance
+                end
             end
             result
         end
@@ -217,14 +226,33 @@ module Seal
                     tokens << Token.new(TokenType::AT, "@", @line)
                     advance
                 when 'r'
-                    tokens << Token.new(TokenType::R, "r", @line)
-                    advance
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                        tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
+                    else
+                        tokens << Token.new(TokenType::R, "r", @line)
+                        advance
+                    end
                 when 't'
-                    tokens << Token.new(TokenType::T, "t", @line)
-                    advance
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                        tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
+                    else
+                        tokens << Token.new(TokenType::T, "t", @line)
+                        advance
+                    end
                 when 's'
-                    tokens << Token.new(TokenType::S, "s", @line)
-                    advance
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                        tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
+                    else
+                        tokens << Token.new(TokenType::S, "s", @line)
+                        advance
+                    end
+                when 'q'
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                        tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
+                    else
+                        tokens << Token.new(TokenType::Q, "q", @line)
+                        advance
+                    end
                 when '\\'
                     tokens << Token.new(TokenType::BACKSLASH, "\\", @line)
                     advance
