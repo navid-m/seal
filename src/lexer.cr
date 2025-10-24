@@ -24,6 +24,9 @@ module Seal
         RPAREN
         LBRACE
         RBRACE
+        LBRACKET
+        RBRACKET
+        LEFT_SHIFT
         AT
         R
         T
@@ -226,34 +229,35 @@ module Seal
                     tokens << Token.new(TokenType::AT, "@", @line)
                     advance
                 when 'r'
-                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                    # Check if next char is letter or underscore (part of identifier, but not number)
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char) == '_')
                         tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
                     else
                         tokens << Token.new(TokenType::R, "r", @line)
                         advance
                     end
                 when 't'
-                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char) == '_')
                         tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
                     else
                         tokens << Token.new(TokenType::T, "t", @line)
                         advance
                     end
                 when 's'
-                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char) == '_')
                         tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
                     else
                         tokens << Token.new(TokenType::S, "s", @line)
                         advance
                     end
                 when 'q'
-                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char).ascii_number? || peek.as(Char) == '_')
+                    if peek && (peek.as(Char).ascii_letter? || peek.as(Char) == '_')
                         tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
                     else
                         tokens << Token.new(TokenType::Q, "q", @line)
                         advance
                     end
-                when '\\'
+{{ ... }}
                     tokens << Token.new(TokenType::BACKSLASH, "\\", @line)
                     advance
                 when '{'
@@ -261,6 +265,12 @@ module Seal
                     advance
                 when '}'
                     tokens << Token.new(TokenType::RBRACE, "}", @line)
+                    advance
+                when '['
+                    tokens << Token.new(TokenType::LBRACKET, "[", @line)
+                    advance
+                when ']'
+                    tokens << Token.new(TokenType::RBRACKET, "]", @line)
                     advance
                 when '~'
                     tokens << Token.new(TokenType::MODULO, "~", @line)
@@ -276,6 +286,10 @@ module Seal
                     advance
                     advance
                     tokens << Token.new(TokenType::LESS_EQUAL, "<=", @line)
+                elsif peek == '<'
+                    advance
+                    advance
+                    tokens << Token.new(TokenType::LEFT_SHIFT, "<<", @line)
                 else
                     tokens << Token.new(TokenType::LESS_THAN, "<", @line)
                     advance

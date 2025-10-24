@@ -5,6 +5,9 @@ module Seal
     abstract class Expr < ASTNode
     end
 
+    abstract class Stmt < ASTNode
+    end
+
     class StringLiteral < Expr
         property value : String
 
@@ -30,6 +33,29 @@ module Seal
         property name : String
 
         def initialize(@name : String)
+        end
+    end
+
+    class ArrayLiteral < Expr
+        property elements : Array(Expr)
+
+        def initialize(@elements : Array(Expr))
+        end
+    end
+
+    class ArrayIndex < Expr
+        property array : Expr
+        property index : Expr
+
+        def initialize(@array : Expr, @index : Expr)
+        end
+    end
+
+    class ArrayAppend < Stmt
+        property array_name : String
+        property value : Expr
+
+        def initialize(@array_name : String, @value : Expr)
         end
     end
 
@@ -74,8 +100,6 @@ module Seal
         end
     end
 
-    abstract class Stmt < ASTNode
-    end
 
     class PrintStmt < Stmt
         property expression : Expr

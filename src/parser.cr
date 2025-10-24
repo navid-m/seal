@@ -94,6 +94,12 @@ module Seal
                 name = current_token.value
                 advance
                 case current_token.type
+                when TokenType::LEFT_SHIFT
+                    advance
+                    expr = parse_expression
+                    stmt = ArrayAppend.new(name, expr)
+                    consume_statement_end
+                    return stmt
                 when TokenType::ASSIGN
                     advance
                     expr = parse_expression
@@ -247,9 +253,21 @@ module Seal
     
         def parse_primary : Expr
             case current_token.type
+            when TokenType::LBRACKET
+                advance
+                elements = [] of Expr
+                if current_token.type != TokenType::RBRACKET
+                    elements << parse_expression
+                    while current_token.type == TokenType::COMMA
+                        advance
+                        elements << parse_expression
+                    end
+                end
+                expect(TokenType::RBRACKET)
+                ArrayLiteral.new(elements)
             when TokenType::BACKSLASH
                 advance
-                if current_token.type == TokenType::BACKSLASH
+                if current_token.type == TokenType::DOLLAR  # \$ for float input
                     advance
                     if current_token.type == TokenType::STRING
                         prompt = current_token.value
@@ -304,6 +322,11 @@ module Seal
                     end
                     expect(TokenType::RPAREN)
                     FunctionCall.new(name, arguments)
+                elsif current_token.type == TokenType::LBRACKET
+                    advance
+                    index = parse_expression
+                    expect(TokenType::RBRACKET)
+                    ArrayIndex.new(Variable.new(name), index)
                 else
                     Variable.new(name)
                 end

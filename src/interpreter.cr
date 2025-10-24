@@ -1,7 +1,7 @@
 require "./ast"
 
 module Seal
-    alias Value = Int32 | Float64 | String
+    alias Value = Int32 | Float64 | String | Array(Value)
 
     class Interpreter
         @variables : Hash(String, Value)
@@ -89,13 +89,18 @@ module Seal
                 raise "Increment/decrement requires integer variable"
             end
             when RepeatLoop
-            count = evaluate_expression(stmt.count)
-            if count.is_a?(Int32)
-                count.times do |i|
+            count_val = evaluate_expression(stmt.count)
+            count = if count_val.is_a?(Int32)
+                count_val
+            elsif count_val.is_a?(Float64)
+                count_val.to_i
+            else
+                raise "Repeat count must be a number"
+            end
+            count.times do |i|
                 @variables["_"] = i + 1
                 stmt.body.each do |body_stmt|
                     execute_statement(body_stmt)
-                end
                 end
             end
             when ThreadSpawn
@@ -109,6 +114,21 @@ module Seal
                 @variables = saved_vars
             end
             @threads << fiber
+            when ArrayAppend
+            value = evaluate_expression(stmt.value)
+            if !@variables.has_key?(stmt.array_name)
+                @variables[stmt.array_name] = [value] of Value
+            else
+                existing = @variables[stmt.array_name]
+                if existing.is_a?(Array)
+                    new_array = [] of Value
+                    existing.each { |v| new_array << v }
+                    new_array << value
+                    @variables[stmt.array_name] = new_array
+                else
+                    raise "Cannot append to non-array variable: #{stmt.array_name}"
+                end
+            end
             end
         end
 
@@ -122,6 +142,20 @@ module Seal
             expr.value
             when Variable
             @variables[expr.name]? || 0
+            when ArrayLiteral
+            elements = [] of Value
+            expr.elements.each do |elem|
+                elements << evaluate_expression(elem)
+            end
+            elements
+            when ArrayIndex
+            array_val = evaluate_expression(expr.array)
+            index_val = evaluate_expression(expr.index)
+            if array_val.is_a?(Array) && index_val.is_a?(Int32)
+                array_val[index_val]? || 0
+            else
+                raise "Invalid array indexing"
+            end
             when UnaryOp
             operand = evaluate_expression(expr.operand)
             if operand.is_a?(Int32)
@@ -243,7 +277,7 @@ module Seal
             end
         end
 
-        def call_function(name : String, arguments : Array(Expr)) : Int32
+        def call_function(name : String, arguments : Array(Expr)) : Value
             case name
             when "p"
                 if arguments.size != 1
@@ -255,9 +289,43 @@ module Seal
                 else
                     raise "Function p expects integer argument"
                 end
+            when "sd"
+                if arguments.size != 1
+                    raise "Function sd expects 1 argument, got #{arguments.size}"
+                end
+                value = evaluate_expression(arguments[0])
+                if value.is_a?(Array)
+                    calculate_std_dev(value)
+                else
+                    raise "Function sd expects array argument"
+                end
             else
                 raise "Unknown function: #{name}"
             end
+        end
+        
+        def calculate_std_dev(arr : Array(Value)) : Float64
+            return 0.0 if arr.empty?
+            
+            # Convert to floats and calculate mean
+            nums = arr.map do |v|
+                case v
+                when Int32
+                    v.to_f
+                when Float64
+                    v
+                else
+                    raise "Array must contain only numbers"
+                end
+            end
+            
+            mean = nums.sum / nums.size
+            
+            # Calculate variance
+            variance = nums.map { |n| (n - mean) ** 2 }.sum / nums.size
+            
+            # Return standard deviation
+            Math.sqrt(variance)
         end
 
         def is_prime(n : Int32) : Bool
