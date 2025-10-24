@@ -370,11 +370,7 @@ module Seal
             end
             
             mean = nums.sum / nums.size
-            
-            # Calculate variance
             variance = nums.map { |n| (n - mean) ** 2 }.sum / nums.size
-            
-            # Return standard deviation
             Math.sqrt(variance)
         end
 
