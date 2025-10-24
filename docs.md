@@ -13,9 +13,10 @@
 ## Basic Syntax
 
 ### Variables
-- Variables are dynamically typed (integers only currently)
-- No declaration needed, just assign: `x=5;`
+- Variables can store integers or strings
+- No declaration needed, just assign: `x=5;` or `name="Alice";`
 - Variables default to 0 if not initialized
+- String concatenation with `+`: `greeting="Hello, "+name;`
 
 ### Statements
 - Statements end with `;` or newline
@@ -154,6 +155,20 @@ r n*2{£_;}        // Repeats n*2 times, _ goes from 1 to n*2
 - `_` starts at 1 and increments to N
 - `_` is a regular variable that can be read or modified
 
+### Thread Spawning
+
+**Syntax:** `t{statements}`
+
+Spawns a new thread to execute the statements concurrently.
+
+**Examples:**
+```seal
+t{:\"A\";s(1);:\"B\";}t{:\"C\";s(2);:\"D\";}"";
+// Spawns two threads that run concurrently
+```
+
+**Note:** Threads execute asynchronously. Use `s(n)` to control timing.
+
 ---
 
 ## Input/Output
@@ -186,13 +201,16 @@ x=42;
 | Instruction | Description | Example |
 |-------------|-------------|---------|
 | `$` | Read integer from stdin | `x=$;` |
-| `$"prompt"` | Read with prompt | `n=$"Enter: ";` |
+| `$"prompt"` | Read integer with prompt | `n=$"Enter: ";` |
+| `\` | Read string from stdin | `name=\;` |
+| `\"prompt"` | Read string with prompt | `name=\"Enter name: ";` |
 
 **Examples:**
 ```seal
 x=$;                      // Read number into x
 y=$"Enter a number: ";    // Prompt and read
-```
+name=\;                    // Read string into name
+name=\"Enter name: ";        // Prompt and read string
 
 ---
 
@@ -204,10 +222,10 @@ y=$"Enter a number: ";    // Prompt and read
 
 ### Available Functions
 
-| Function | Description | Example | Output |
-|----------|-------------|---------|--------|
-| `p(n)` | Check if n is prime | `£p(7);` | `1` (true) |
-| `p(n)` | Check if n is prime | `£p(4);` | `0` (false) |
+| Function | Description | Example | Returns |
+|----------|-------------|---------|---------|
+| `p(n)` | Check if n is prime | `£p(7);` | `1` (true) or `0` (false) |
+| `s(n)` | Sleep for n seconds | `s(2);` | `0` |
 
 **Example:**
 ```seal
@@ -332,19 +350,6 @@ From highest to lowest:
 6. Omit semicolons where newlines work
 7. Use `@(condition)` for truthiness checks
 8. Comparison operators return 1/0, use them directly
-9. Variables default to 0, no need to initialize
-
-### Byte-Saving Examples
-
-**Before:**
-```seal
-x = x + 1;
-```
-
-**After:**
-```seal
-x¬
-```
 
 **Before:**
 ```seal

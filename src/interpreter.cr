@@ -4,17 +4,19 @@ module Seal
     alias Value = Int32 | String
 
     class Interpreter
-        @variables : Hash(String, Int32)
+        @variables : Hash(String, Value)
         @output : IO
 
         def initialize(@output : IO = STDOUT)
-            @variables = {} of String => Int32
+            @variables = {} of String => Value
         end
 
         def execute(program : Program)
             program.statements.each do |stmt|
             execute_statement(stmt)
             end
+            Fiber.yield
+            sleep 0.1
         end
 
         def execute_statement(stmt : Stmt)
@@ -35,11 +37,7 @@ module Seal
             end
             when Assignment
             value = evaluate_expression(stmt.expression)
-            if value.is_a?(Int32)
-                @variables[stmt.variable] = value
-            else
-                raise "Cannot assign non-integer value to variable"
-            end
+            @variables[stmt.variable] = value
             when WhileLoop
             while true
                 condition_value = evaluate_expression(stmt.condition)
@@ -52,7 +50,7 @@ module Seal
             current = @variables[stmt.variable]? || 0
             value = evaluate_expression(stmt.expression)
             
-            if value.is_a?(Int32)
+            if current.is_a?(Int32) && value.is_a?(Int32)
                 result = case stmt.operator
                 when "+="
                 current + value
@@ -67,19 +65,23 @@ module Seal
                 end
                 @variables[stmt.variable] = result
             else
-                raise "Cannot perform compound assignment with non-integer value"
+                raise "Compound assignment requires integer operands"
             end
             when IncrementDecrement
             current = @variables[stmt.variable]? || 0
-            result = case stmt.operator
-            when "++", "¬"
-                current + 1
-            when "--"
-                current - 1
+            if current.is_a?(Int32)
+                result = case stmt.operator
+                when "++", "¬"
+                    current + 1
+                when "--"
+                    current - 1
+                else
+                    raise "Unknown increment/decrement operator: #{stmt.operator}"
+                end
+                @variables[stmt.variable] = result
             else
-                raise "Unknown increment/decrement operator: #{stmt.operator}"
+                raise "Increment/decrement requires integer variable"
             end
-            @variables[stmt.variable] = result
             when RepeatLoop
             count = evaluate_expression(stmt.count)
             if count.is_a?(Int32)
@@ -88,6 +90,12 @@ module Seal
                 stmt.body.each do |body_stmt|
                     execute_statement(body_stmt)
                 end
+                end
+            end
+            when ThreadSpawn
+            spawn do
+                stmt.body.each do |body_stmt|
+                execute_statement(body_stmt)
                 end
             end
             end
@@ -117,7 +125,18 @@ module Seal
             left = evaluate_expression(expr.left)
             right = evaluate_expression(expr.right)
             
-            if left.is_a?(Int32) && right.is_a?(Int32)
+            if left.is_a?(String) || right.is_a?(String)
+                case expr.operator
+                when "+"
+                left.to_s + right.to_s
+                when "==", "|"
+                left.to_s == right.to_s ? 1 : 0
+                when "!="
+                left.to_s != right.to_s ? 1 : 0
+                else
+                raise "Operator #{expr.operator} not supported for strings"
+                end
+            elsif left.is_a?(Int32) && right.is_a?(Int32)
                 case expr.operator
                 when "+"
                 left + right
@@ -145,7 +164,7 @@ module Seal
                 raise "Unknown binary operator: #{expr.operator}"
                 end
             else
-                raise "Binary operations only supported on integers"
+                raise "Type mismatch in binary operation"
             end
             when FunctionCall
             call_function(expr.name, expr.arguments)
@@ -167,6 +186,21 @@ module Seal
             else
                 evaluate_expression(expr.false_expr)
             end
+            when Sleep
+            duration = evaluate_expression(expr.duration)
+            if duration.is_a?(Int32)
+                sleep duration.seconds
+                0
+            else
+                raise "Sleep duration must be an integer"
+            end
+            when StringInput
+            if expr.prompt
+                @output.print expr.prompt
+                @output.flush
+            end
+            input = gets
+            input ? input.strip : ""
             else
             raise "Unknown expression type"
             end

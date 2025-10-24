@@ -139,6 +139,27 @@ module Seal
         end
     end
 
+    class ThreadSpawn < Stmt
+        property body : Array(Stmt)
+
+        def initialize(@body : Array(Stmt))
+        end
+    end
+
+    class Sleep < Expr
+        property duration : Expr
+
+        def initialize(@duration : Expr)
+        end
+    end
+
+    class StringInput < Expr
+        property prompt : String?
+
+        def initialize(@prompt : String? = nil)
+        end
+    end
+
     class Program < ASTNode
         property statements : Array(Stmt)
 

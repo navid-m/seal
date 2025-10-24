@@ -26,6 +26,9 @@ module Seal
         RBRACE
         AT
         R
+        T
+        S
+        BACKSLASH
         LESS_THAN
         GREATER_THAN
         LESS_EQUAL
@@ -215,6 +218,15 @@ module Seal
                     advance
                 when 'r'
                     tokens << Token.new(TokenType::R, "r", @line)
+                    advance
+                when 't'
+                    tokens << Token.new(TokenType::T, "t", @line)
+                    advance
+                when 's'
+                    tokens << Token.new(TokenType::S, "s", @line)
+                    advance
+                when '\\'
+                    tokens << Token.new(TokenType::BACKSLASH, "\\", @line)
                     advance
                 when '{'
                     tokens << Token.new(TokenType::LBRACE, "{", @line)

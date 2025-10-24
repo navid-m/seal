@@ -60,6 +60,8 @@ module Seal
                 return parse_while_loop
             when TokenType::R
                 return parse_repeat_loop
+            when TokenType::T
+                return parse_thread_spawn
             when TokenType::COLON
                 advance
                 expr = parse_expression
@@ -165,6 +167,22 @@ module Seal
             RepeatLoop.new(count, body)
         end
     
+        def parse_thread_spawn : Stmt
+            expect(TokenType::T)
+            expect(TokenType::LBRACE)
+            
+            body = [] of Stmt
+            skip_newlines
+            while current_token.type != TokenType::RBRACE && current_token.type != TokenType::EOF
+                stmt = parse_statement
+                body << stmt if stmt
+                skip_newlines
+            end
+            
+            expect(TokenType::RBRACE)
+            ThreadSpawn.new(body)
+        end
+    
         def parse_expression : Expr
             parse_ternary
         end
@@ -229,6 +247,21 @@ module Seal
     
         def parse_primary : Expr
             case current_token.type
+            when TokenType::BACKSLASH
+                advance
+                if current_token.type == TokenType::STRING
+                    prompt = current_token.value
+                    advance
+                    StringInput.new(prompt)
+                else
+                    StringInput.new
+                end
+            when TokenType::S
+                advance
+                expect(TokenType::LPAREN)
+                duration = parse_expression
+                expect(TokenType::RPAREN)
+                Sleep.new(duration)
             when TokenType::STRING
                 value = current_token.value
                 advance
