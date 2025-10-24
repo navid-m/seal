@@ -56,6 +56,8 @@ module Seal
         def parse_statement : Stmt?
             skip_newlines
             case current_token.type
+            when TokenType::AT
+                return parse_while_loop
             when TokenType::STRING
                 expr = parse_expression
                 stmt = PrintStmt.new(expr)
@@ -120,8 +122,40 @@ module Seal
             end
         end
     
+        def parse_while_loop : WhileLoop
+            expect(TokenType::AT)
+            expect(TokenType::LPAREN)
+            condition = parse_expression
+            expect(TokenType::RPAREN)
+            expect(TokenType::LBRACE)
+            skip_newlines
+            
+            body = [] of Stmt
+            while current_token.type != TokenType::RBRACE && current_token.type != TokenType::EOF
+                stmt = parse_statement
+                body << stmt if stmt
+                skip_newlines
+            end
+            
+            expect(TokenType::RBRACE)
+            WhileLoop.new(condition, body)
+        end
+    
         def parse_expression : Expr
-            parse_additive
+            parse_comparison
+        end
+    
+        def parse_comparison : Expr
+            left = parse_additive
+            while current_token.type.in?(TokenType::LESS_THAN, TokenType::GREATER_THAN, 
+                                         TokenType::LESS_EQUAL, TokenType::GREATER_EQUAL,
+                                         TokenType::EQUAL, TokenType::NOT_EQUAL)
+                op = current_token.value
+                advance
+                right = parse_additive
+                left = BinaryOp.new(left, op, right)
+            end
+            left
         end
     
         def parse_additive : Expr

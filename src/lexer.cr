@@ -21,6 +21,15 @@ module Seal
         COMMA
         LPAREN
         RPAREN
+        LBRACE
+        RBRACE
+        AT
+        LESS_THAN
+        GREATER_THAN
+        LESS_EQUAL
+        GREATER_EQUAL
+        EQUAL
+        NOT_EQUAL
         NEWLINE
         EOF
     end
@@ -164,8 +173,14 @@ module Seal
                     advance
                 end
                 when '='
+                if peek == '='
+                    advance
+                    advance
+                    tokens << Token.new(TokenType::EQUAL, "==", @line)
+                else
                     tokens << Token.new(TokenType::ASSIGN, "=", @line)
                     advance
+                end
                 when '%'
                     tokens << Token.new(TokenType::PERCENT, "%", @line)
                     advance
@@ -184,6 +199,41 @@ module Seal
                 when '$'
                     tokens << Token.new(TokenType::DOLLAR, "$", @line)
                     advance
+                when '@'
+                    tokens << Token.new(TokenType::AT, "@", @line)
+                    advance
+                when '{'
+                    tokens << Token.new(TokenType::LBRACE, "{", @line)
+                    advance
+                when '}'
+                    tokens << Token.new(TokenType::RBRACE, "}", @line)
+                    advance
+                when '<'
+                if peek == '='
+                    advance
+                    advance
+                    tokens << Token.new(TokenType::LESS_EQUAL, "<=", @line)
+                else
+                    tokens << Token.new(TokenType::LESS_THAN, "<", @line)
+                    advance
+                end
+                when '>'
+                if peek == '='
+                    advance
+                    advance
+                    tokens << Token.new(TokenType::GREATER_EQUAL, ">=", @line)
+                else
+                    tokens << Token.new(TokenType::GREATER_THAN, ">", @line)
+                    advance
+                end
+                when '!'
+                if peek == '='
+                    advance
+                    advance
+                    tokens << Token.new(TokenType::NOT_EQUAL, "!=", @line)
+                else
+                    advance
+                end
                 else
                 if @current_char.as(Char).ascii_number?
                     tokens << Token.new(TokenType::NUMBER, read_number, @line)

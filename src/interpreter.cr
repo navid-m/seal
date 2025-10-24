@@ -36,6 +36,14 @@ module Seal
             else
                 raise "Cannot assign non-integer value to variable"
             end
+            when WhileLoop
+            while true
+                condition_value = evaluate_expression(stmt.condition)
+                break unless condition_value.is_a?(Int32) && condition_value != 0
+                stmt.body.each do |body_stmt|
+                    execute_statement(body_stmt)
+                end
+            end
             when CompoundAssignment
             current = @variables[stmt.variable]? || 0
             value = evaluate_expression(stmt.expression)
@@ -93,6 +101,18 @@ module Seal
                 left * right
                 when "/"
                 left // right
+                when "<"
+                left < right ? 1 : 0
+                when ">"
+                left > right ? 1 : 0
+                when "<="
+                left <= right ? 1 : 0
+                when ">="
+                left >= right ? 1 : 0
+                when "=="
+                left == right ? 1 : 0
+                when "!="
+                left != right ? 1 : 0
                 else
                 raise "Unknown binary operator: #{expr.operator}"
                 end

@@ -107,6 +107,14 @@ module Seal
         end
     end
 
+    class WhileLoop < Stmt
+        property condition : Expr
+        property body : Array(Stmt)
+
+        def initialize(@condition : Expr, @body : Array(Stmt))
+        end
+    end
+
     class Program < ASTNode
         property statements : Array(Stmt)
 
