@@ -39,7 +39,7 @@
 
 | Operator | Description | Example | Result |
 |----------|-------------|---------|--------|
-| `==` | Equal to | `5==5` | `1` (true) |
+| `==` or `|` | Equal to | `5==5` or `5|5` | `1` (true) |
 | `!=` | Not equal to | `5!=3` | `1` (true) |
 | `<` | Less than | `3<5` | `1` (true) |
 | `>` | Greater than | `5>3` | `1` (true) |
@@ -248,11 +248,12 @@ From highest to lowest:
 ## Tips for Code Golf
 
 1. Use `¬` instead of `++` (saves 1 byte)
-2. Use `:` for printing without newlines
-3. Omit semicolons where newlines work
-4. Use `@(condition)` for truthiness checks
-5. Comparison operators return 1/0, use them directly
-6. Variables default to 0, no need to initialize
+2. Use `|` instead of `==` (saves 1 byte)
+3. Use `:` for printing without newlines
+4. Omit semicolons where newlines work
+5. Use `@(condition)` for truthiness checks
+6. Comparison operators return 1/0, use them directly
+7. Variables default to 0, no need to initialize
 
 ### Byte-Saving Examples
 

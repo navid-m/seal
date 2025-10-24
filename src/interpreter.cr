@@ -114,7 +114,7 @@ module Seal
                 left <= right ? 1 : 0
                 when ">="
                 left >= right ? 1 : 0
-                when "=="
+                when "==", "|"
                 left == right ? 1 : 0
                 when "!="
                 left != right ? 1 : 0

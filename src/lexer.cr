@@ -219,6 +219,9 @@ module Seal
                 when '~'
                     tokens << Token.new(TokenType::MODULO, "~", @line)
                     advance
+                when '|'
+                    tokens << Token.new(TokenType::EQUAL, "|", @line)
+                    advance
                 when '<'
                 if peek == '='
                     advance
