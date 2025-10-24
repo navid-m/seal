@@ -107,6 +107,13 @@ module Seal
         end
     end
 
+    class PrintNoNewline < Stmt
+        property expression : Expr
+
+        def initialize(@expression : Expr)
+        end
+    end
+
     class WhileLoop < Stmt
         property condition : Expr
         property body : Array(Stmt)

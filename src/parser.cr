@@ -58,6 +58,12 @@ module Seal
             case current_token.type
             when TokenType::AT
                 return parse_while_loop
+            when TokenType::COLON
+                advance
+                expr = parse_expression
+                stmt = PrintNoNewline.new(expr)
+                consume_statement_end
+                return stmt
             when TokenType::STRING
                 expr = parse_expression
                 stmt = PrintStmt.new(expr)

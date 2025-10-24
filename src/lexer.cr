@@ -30,6 +30,7 @@ module Seal
         GREATER_EQUAL
         EQUAL
         NOT_EQUAL
+        COLON
         NEWLINE
         EOF
     end
@@ -189,6 +190,9 @@ module Seal
                     advance
                 when ';'
                     tokens << Token.new(TokenType::SEMICOLON, ";", @line)
+                    advance
+                when ':'
+                    tokens << Token.new(TokenType::COLON, ":", @line)
                     advance
                 when '£'
                     tokens << Token.new(TokenType::POUND, "£", @line)

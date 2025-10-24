@@ -24,6 +24,9 @@ module Seal
             when PrintExpression
             value = evaluate_expression(stmt.expression)
             puts value
+            when PrintNoNewline
+            value = evaluate_expression(stmt.expression)
+            print value
             when PrintVariable
             stmt.variables.each do |var_name|
                 value = @variables[var_name]? || 0
