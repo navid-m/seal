@@ -5,7 +5,7 @@ require "./lexer"
 require "./parser"
 require "./interpreter"
 
-module Pillar
+module Seal
     VERSION = "0.1.0"
   
     if ARGV.size < 1

@@ -1,4 +1,4 @@
-module Pillar
+module Seal
     abstract class ASTNode
     end
 

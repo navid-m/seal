@@ -1,12 +1,12 @@
-name: pillar
+name: seal
 version: 0.1.0
 
 authors:
   - Navid M <navidmomtahen@gmail.com>
 
 targets:
-  pillar:
-    main: src/pillar.cr
+  seal:
+    main: src/seal.cr
 
 crystal: '>= 1.18.1'
 

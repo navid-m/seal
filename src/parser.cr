@@ -1,7 +1,7 @@
 require "./ast"
 require "./lexer"
 
-module Pillar
+module Seal
     class Parser
         @tokens : Array(Token)
         @pos : Int32

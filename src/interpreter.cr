@@ -1,6 +1,6 @@
 require "./ast"
 
-module Pillar
+module Seal
     alias Value = Int32 | String
 
     class Interpreter

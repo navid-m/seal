@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Pillar do
+describe Seal do
     it "works" do
         true.should eq(true)
     end
