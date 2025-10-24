@@ -27,10 +27,18 @@ module Seal
             case stmt
             when PrintStmt
             value = evaluate_expression(stmt.expression)
-            @output.puts value
+            if value.is_a?(Array)
+                value.each { |v| @output.puts v }
+            else
+                @output.puts value
+            end
             when PrintExpression
             value = evaluate_expression(stmt.expression)
-            @output.puts value
+            if value.is_a?(Array)
+                value.each { |v| @output.puts v }
+            else
+                @output.puts value
+            end
             when PrintNoNewline
             value = evaluate_expression(stmt.expression)
             @output.print value
@@ -349,6 +357,19 @@ module Seal
                     calculate_std_dev(value)
                 else
                     raise "Function sd expects array argument"
+                end
+            when "d"
+                if arguments.size != 2
+                    raise "Function d expects 2 arguments, got #{arguments.size}"
+                end
+                a = evaluate_expression(arguments[0])
+                b = evaluate_expression(arguments[1])
+                if a.is_a?(Int32) && b.is_a?(Int32)
+                    quotient = a // b
+                    remainder = a % b
+                    [quotient, remainder] of Value
+                else
+                    raise "Function d expects integer arguments"
                 end
             else
                 raise "Unknown function: #{name}"
