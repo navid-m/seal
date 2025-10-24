@@ -255,7 +255,6 @@ module Seal
                     tokens << Token.new(TokenType::AT, "@", @line)
                     advance
                 when 'r'
-                    # Check if next char is letter or underscore (part of identifier, but not number)
                     if peek && (peek.as(Char).ascii_letter? || peek.as(Char) == '_')
                         tokens << Token.new(TokenType::IDENTIFIER, read_identifier, @line)
                     else
