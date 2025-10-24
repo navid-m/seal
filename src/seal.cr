@@ -16,7 +16,7 @@ module Seal
     end
   
     begin
-        content = File.read(ARGV[0] + ".p")
+        content = File.read(ARGV[0] + ".sl")
         lexer   = Lexer.new(content)
         tokens  = lexer.tokenize
         parser  = Parser.new(tokens)
@@ -24,7 +24,7 @@ module Seal
         interpreter = Interpreter.new
         interpreter.execute(program)
     rescue ex : File::NotFoundError
-        puts "No such file exists: #{ARGV[0]}.p"
+        puts "No such file exists: #{ARGV[0]}.sl"
     rescue ex : Exception
         puts "Error: #{ex.message}"
     end
