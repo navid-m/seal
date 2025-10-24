@@ -7,6 +7,7 @@ module Seal
         MINUS
         MULTIPLY
         DIVIDE
+        MODULO
         ASSIGN
         PLUS_ASSIGN
         MINUS_ASSIGN
@@ -214,6 +215,9 @@ module Seal
                     advance
                 when '}'
                     tokens << Token.new(TokenType::RBRACE, "}", @line)
+                    advance
+                when '~'
+                    tokens << Token.new(TokenType::MODULO, "~", @line)
                     advance
                 when '<'
                 if peek == '='

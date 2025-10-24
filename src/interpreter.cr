@@ -104,6 +104,8 @@ module Seal
                 left * right
                 when "/"
                 left // right
+                when "~"
+                left % right
                 when "<"
                 left < right ? 1 : 0
                 when ">"

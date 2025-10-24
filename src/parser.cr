@@ -177,7 +177,7 @@ module Seal
     
         def parse_multiplicative : Expr
             left = parse_primary
-            while current_token.type.in?(TokenType::MULTIPLY, TokenType::DIVIDE)
+            while current_token.type.in?(TokenType::MULTIPLY, TokenType::DIVIDE, TokenType::MODULO)
                 op = current_token.value
                 advance
                 right = parse_primary
