@@ -13,7 +13,7 @@ end
 
 if PROGRAM_NAME.includes?("seal")
     if ARGV.size < 1
-        puts "Wrong argument count"
+        puts "Usage: seal [file-without-sl-extension]"
         exit(1)
     end
 
