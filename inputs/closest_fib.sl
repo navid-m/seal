@@ -1,1 +1,1 @@
-n=$;x=0;y=1@(n+n>=x+y){c=x+y;x=y;y=c}£x
+n=$;x=0;y=1;@(n+n>=x+y){c=x+y;x=y;y=c}`x

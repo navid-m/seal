@@ -285,6 +285,9 @@ module Seal
 {{ ... }}
                     tokens << Token.new(TokenType::BACKSLASH, "\\", @line)
                     advance
+                when '`'
+                    tokens << Token.new(TokenType::POUND, "`", @line)
+                    advance
                 when '{'
                     tokens << Token.new(TokenType::LBRACE, "{", @line)
                     advance
