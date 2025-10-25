@@ -348,28 +348,24 @@ module Seal
                 else
                     raise "Function p expects integer argument"
                 end
-            when "sd"
-                if arguments.size != 1
-                    raise "Function sd expects 1 argument, got #{arguments.size}"
-                end
-                value = evaluate_expression(arguments[0])
-                if value.is_a?(Array)
-                    calculate_std_dev(value)
+            when "sd", "d"
+                if arguments.size == 1
+                    value = evaluate_expression(arguments[0])
+                    if value.is_a?(Array)
+                        calculate_std_dev(value)
+                    else
+                        raise "Function #{name} expects array argument"
+                    end
+                elsif arguments.size == 2 && name == "d"
+                    a = evaluate_expression(arguments[0])
+                    b = evaluate_expression(arguments[1])
+                    if a.is_a?(Int32) && b.is_a?(Int32)
+                        [a // b, a % b] of Value
+                    else
+                        raise "Function d expects integer arguments"
+                    end
                 else
-                    raise "Function sd expects array argument"
-                end
-            when "d"
-                if arguments.size != 2
-                    raise "Function d expects 2 arguments, got #{arguments.size}"
-                end
-                a = evaluate_expression(arguments[0])
-                b = evaluate_expression(arguments[1])
-                if a.is_a?(Int32) && b.is_a?(Int32)
-                    quotient = a // b
-                    remainder = a % b
-                    [quotient, remainder] of Value
-                else
-                    raise "Function d expects integer arguments"
+                    raise "Function #{name} expects 1 argument for stddev or 2 for divmod"
                 end
             else
                 raise "Unknown function: #{name}"
