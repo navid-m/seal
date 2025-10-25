@@ -102,6 +102,10 @@ x=5;
 
 **Note:** `¬` is the shorter alternative to `++` for code golf.
 
+**Code Golf Tips:**
+- Use `` ` `` (backtick) instead of `£` for printing - it's 1 byte shorter
+- Use `¬` instead of `++` for incrementing
+
 ---
 
 ## Control Flow
@@ -179,7 +183,7 @@ t{:\"A\";s(1);:\"B\";}t{:\"C\";s(2);:\"D\";}"";
 |-------------|-------------|---------|--------|
 | `"text"` | Print string with newline | `"Hello";` | `Hello\n` |
 | `%var` | Print variable(s) with newline | `%x,y;` | `5\n10\n` |
-| `£expr` | Print expression with newline | `£x+5;` | `10\n` |
+| `` `expr`` or `£expr` | Print expression with newline | `` `x+5;`` or `£x+5;` | `10\n` |
 | `:expr` | Print without newline | `:"Hi";` | `Hi` |
 
 **Examples:**
@@ -211,7 +215,7 @@ x=$;                      // Read number into x
 y=$"Enter a number: ";    // Prompt and read
 name=\;                    // Read string into name
 name=\"Enter name: ";        // Prompt and read string
-
+```
 ---
 
 ## Built-in Functions
