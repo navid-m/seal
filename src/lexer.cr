@@ -45,14 +45,29 @@ module Seal
         NEWLINE
         EOF
     end
-
     class Preprocessor
         ALIASES = {
             "@@" => "\\$*$",
         }
 
+        BRACKET_PAIRS = {
+            '(' => ')',
+            ')' => '(',
+            '[' => ']',
+            ']' => '[',
+            '{' => '}',
+            '}' => '{',
+            '<' => '>',
+            '>' => '<',
+        }
+
+        def self.mirror_char(c : Char) : Char
+            BRACKET_PAIRS[c]? || c
+        end
+
         def self.process(source : String) : String
             result = source
+            
             lines = result.lines
             lines = lines.map do |line|
                 comment_pos = line.index("//")
@@ -63,7 +78,31 @@ module Seal
                 end
             end
             result = lines.join("\n")
-            
+            expanded = String::Builder.new
+            i = 0
+            while i < result.size
+                if result[i] == '^'
+                    chars = [] of Char
+                    j = i - 1
+                    while j >= 0 && chars.size < 2
+                        unless result[j].whitespace?
+                            chars << result[j]
+                        end
+                        j -= 1
+                    end
+                    
+                    if chars.size == 2
+                        expanded << mirror_char(chars[0])
+                        expanded << mirror_char(chars[1])
+                    end
+                else
+                    expanded << result[i]
+                end
+                i += 1
+            end
+
+            result = expanded.to_s
+
             ALIASES.each do |alias_str, replacement|
                 result = result.gsub(alias_str, replacement)
             end
