@@ -45,6 +45,7 @@ module Seal
         NEWLINE
         EOF
     end
+
     class Preprocessor
         ALIASES = {
             "@@" => "\\$*$",
